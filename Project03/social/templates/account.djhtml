@@ -1,0 +1,60 @@
+{% extends 'social_base.djhtml' %}
+
+{% block title %}Account Page{% endblock %}
+
+{% block css %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'w3login.css' %}">
+{% endblock %}
+
+{% block middle_column %}
+    <div class="w3-row-padding">
+        <div class="w3-col m12">
+            <div class="w3-card w3-round w3-white">
+                <div class="w3-container w3-padding">
+                    <h6 class="w3-opacity">Change Password</h6>
+                    <form class="modal-content" method="post" action="{% url 'social:account_view' %}">
+                        {% csrf_token %}
+                        <div class="container">
+                            <input type="hidden" name="operation" value="password">
+                            <input type="password" placeholder="Enter Current Password" name="password" required>
+                            <input type="password" placeholder="Enter New Password" name="new_password1" required>
+                            <input type="password" placeholder="Confirm New Password" name="new_password2" required>
+
+                            <span style="color: red">{{ msg }}</span>
+
+                            <button type="submit">Change</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="w3-row-padding">
+        <div class="w3-col m12">
+            <div class="w3-card w3-round w3-white">
+                <div class="w3-container w3-padding">
+                    <h6 class="w3-opacity">Update Info</h6>
+                    <form class="modal-content" method="post" action="{% url 'social:account_view' %}">
+                        {% csrf_token %}
+                        <div class="container">
+                            <input type="hidden" name="operation" value="info">
+                            <label><b>Employment</b></label>
+                            <input type="text" placeholder="Enter Employment" name="employment" value="{{ user_info.employment | default:'Unspecified' }}" required>
+                            <label><b>Location</b></label>
+                            <input type="text" placeholder="Enter Location" name="location" value="{{ user_info.location | default:'Unspecified' }}" required>
+                            <label><b>Birthday</b></label>
+                            <input type="text" placeholder="Enter Birthday" name="birthday" value="{% if user_info.birthday %}{{ user_info.birthday | date:'Y-m-d' }}{% endif %}" required>
+                            <label><b>Interests</b></label>
+                            <input type="text" placeholder="Enter Interests, separated by space" name="interests" value="{% for i in user_info.interests.all %}{{ i.label }} {% endfor %}" required>
+
+                            <span style="color: red">{{ info_msg }}</span>
+
+                            <button type="submit">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
